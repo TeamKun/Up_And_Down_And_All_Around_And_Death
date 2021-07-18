@@ -1,0 +1,2 @@
+# Up_And_Down_And_All_Around_And_Death
+重力MODのデスゲーム用アドオン
