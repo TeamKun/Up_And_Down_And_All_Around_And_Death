@@ -1,0 +1,3 @@
+commands.gravity.alreadystarted=Already game started
+commands.gravity.nostarted=Not game started
+death.attack.outOfArea=%s$s fell out of the area

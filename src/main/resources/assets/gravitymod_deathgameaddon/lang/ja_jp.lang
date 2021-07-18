@@ -1,0 +1,3 @@
+commands.gravity.alreadystarted=すでにゲームが開始されています
+commands.gravity.nostarted=ゲームが開始されていません
+death.attack.outOfArea=%s$s は場外に出てしまった

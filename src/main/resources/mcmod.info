@@ -1,15 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "gravitymod_deathgameaddon",
+  "name": "Up And Down And All Around And Death",
+  "description": "The Ikisugi Up And Down And All Around MOD AddOn",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://github.com/TeamKun/Up_And_Down_And_All_Around_And_Death",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
-  "logoFile": "",
+  "authorList": ["MORIMORI0317"],
+  "credits": "KUN Dev Lab",
   "screenshots": [],
   "dependencies": []
 }
