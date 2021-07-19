@@ -3,10 +3,14 @@ package net.kunmc.lab.gravitymod_dga.data;
 import net.kunmc.lab.gravitymod_dga.GADamageSources;
 import net.kunmc.lab.gravitymod_dga.util.ServerUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.GameType;
+import net.minecraft.world.World;
 import uk.co.mysterymayhem.gravitymod.api.API;
 import uk.co.mysterymayhem.gravitymod.api.EnumGravityDirection;
 
@@ -21,10 +25,12 @@ public class GravityGameInstance {
     private boolean dismemberedGravity;
     private int maxEntityCramming;
     private boolean running;
+    private int startWait;
     private int coolDown;
     private int dimension;
     private int speed;
     private int size;
+    private int cont;
     private double x;
     private double y;
     private double z;
@@ -50,6 +56,8 @@ public class GravityGameInstance {
         this.y = y;
         this.z = z;
         this.coolDown = 0;
+        this.startWait = 20 * 10;
+        this.cont = 0;
         this.speed = speed;
         this.dimension = dimension;
         this.size = size;
@@ -85,6 +93,16 @@ public class GravityGameInstance {
             return;
         }
 
+        if (startWait > 0) {
+            startWait--;
+
+            for (UUID player : players) {
+                EntityPlayerMP pl = ServerUtils.getServer().getPlayerList().getPlayerByUUID(player);
+                pl.sendStatusMessage(new TextComponentTranslation("gravitygame.start.wait", (startWait / 20)), true);
+            }
+            return;
+        }
+
         coolDown++;
 
         if (coolDown >= 20 * speed) {
@@ -104,17 +122,47 @@ public class GravityGameInstance {
                 }
             }
 
+            int mensiz = (size * 2) * (size * 2);
+            float par = Math.min(((float) cont / 512), 0.5f);
+
+            for (EnumGravityDirection value : EnumGravityDirection.values()) {
+                for (int i = 0; i < ((float) mensiz * par); i++) {
+                    BlockPos f = null;
+
+                    if (value == EnumGravityDirection.DOWN)
+                        f = new BlockPos(x - size + random.nextInt(size * 2), y - size, z - size + random.nextInt(size * 2));
+                    if (value == EnumGravityDirection.UP)
+                        f = new BlockPos(x - size + random.nextInt(size * 2), y + size, z - size + random.nextInt(size * 2));
+                    if (value == EnumGravityDirection.EAST)
+                        f = new BlockPos(x - size, y - size + random.nextInt(size * 2), z - size + random.nextInt(size * 2));
+                    if (value == EnumGravityDirection.WEST)
+                        f = new BlockPos(x + size, y - size + random.nextInt(size * 2), z - size + random.nextInt(size * 2));
+                    if (value == EnumGravityDirection.SOUTH)
+                        f = new BlockPos(x - size + random.nextInt(size * 2), y - size + random.nextInt(size * 2), z - size);
+                    if (value == EnumGravityDirection.NORTH)
+                        f = new BlockPos(x - size + random.nextInt(size * 2), y - size + random.nextInt(size * 2), z + size);
+
+                    if (f != null)
+                        getWorld().setBlockState(f, Blocks.AIR.getDefaultState());
+                }
+            }
+
+            cont++;
+
         }
+
+
         for (UUID player : players) {
             EntityPlayerMP pl = ServerUtils.getServer().getPlayerList().getPlayerByUUID(player);
             if (pl.isDead)
                 continue;
             Vec3d vec3d = pl.getPositionVector();
             int gsize = size + 3;
-            if (!(vec3d.x <= x + gsize && vec3d.x >= x - gsize && vec3d.y <= y + gsize && vec3d.y >= y - gsize && vec3d.z <= z + gsize && vec3d.z >= z - gsize)) {
+            if (!(vec3d.x <= x + gsize && vec3d.x >= x - gsize && vec3d.y <= y + gsize && vec3d.y >= y - gsize && vec3d.z <= z + gsize && vec3d.z >= z - gsize && pl.dimension == dimension)) {
                 pl.attackEntityFrom(GADamageSources.OUT_OF_AREA, Float.MAX_VALUE);
                 ikisugiPlayers.add(player);
             }
+            pl.sendStatusMessage(new TextComponentTranslation("gravitygame.next", speed - (coolDown / 20)), true);
         }
         players.removeAll(ikisugiPlayers);
         ikisugiPlayers.forEach(directiondata::remove);
@@ -160,5 +208,13 @@ public class GravityGameInstance {
 
     public List<UUID> getPlayers() {
         return players;
+    }
+
+    private World getWorld() {
+        return ServerUtils.getServer().getWorld(dimension);
+    }
+
+    public boolean isWait() {
+        return startWait > 0;
     }
 }

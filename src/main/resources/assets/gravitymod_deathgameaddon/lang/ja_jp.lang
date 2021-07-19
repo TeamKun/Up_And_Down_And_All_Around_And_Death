@@ -1,3 +1,5 @@
 commands.gravity.alreadystarted=すでにゲームが開始されています
 commands.gravity.nostarted=ゲームが開始されていません
-death.attack.outOfArea=%s$s は場外に出てしまった
+death.attack.outOfArea=%s は場外に出てしまった
+gravitygame.start.wait=開始まであと%s秒
+gravitygame.next=次の回転まであと%s秒
