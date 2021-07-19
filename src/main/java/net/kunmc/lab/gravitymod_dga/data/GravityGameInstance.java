@@ -39,7 +39,7 @@ public class GravityGameInstance {
         return INSTANCE;
     }
 
-    public void start(double x, double y, double z, int speed, int dimension, int size) {
+    public void start(double x, double y, double z, int speed, int dimension, int size,boolean dismemberedGravity) {
         this.maxEntityCramming = ServerUtils.getServer().getWorld(dimension).getGameRules().getInt("maxEntityCramming");
         ServerUtils.getServer().getWorld(dimension).getGameRules().setOrCreateGameRule("maxEntityCramming", "0");
         for (EntityPlayerMP player : ServerUtils.getPlayers()) {
@@ -51,6 +51,7 @@ public class GravityGameInstance {
                 player.changeDimension(dimension);
             player.connection.setPlayerLocation(x, y, z, 0, 0);
             player.setGameType(GameType.ADVENTURE);
+            player.setHealth(player.getMaxHealth());
         }
         this.x = x;
         this.y = y;
@@ -88,7 +89,12 @@ public class GravityGameInstance {
         players.removeAll(offLine);
         offLine.forEach(directiondata::remove);
 
-        if (players.isEmpty()) {
+        if (players.size() <= 1) {
+            players.stream().findFirst().ifPresent(n -> {
+                for (EntityPlayerMP player : ServerUtils.getServer().getPlayerList().getPlayers()) {
+                    player.sendStatusMessage(new TextComponentTranslation("gravitygame.lastPlayer", ServerUtils.getServer().getPlayerList().getPlayerByUUID(n).getGameProfile().getName()), false);
+                }
+            });
             stop();
             return;
         }
@@ -146,9 +152,7 @@ public class GravityGameInstance {
                         getWorld().setBlockState(f, Blocks.AIR.getDefaultState());
                 }
             }
-
             cont++;
-
         }
 
 

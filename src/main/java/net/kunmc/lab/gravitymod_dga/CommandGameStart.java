@@ -55,6 +55,7 @@ public class CommandGameStart extends CommandBase {
                 Block block = args.length > 5 ? CommandBase.getBlockByText(sender, args[5]) : Blocks.STONE;
                 IBlockState state = args.length > 6 ? convertArgToBlockState(block, args[6]) : block.getDefaultState();
                 int speed = args.length > 7 ? parseInt(args[7], 1) : 10;
+                boolean dismemberedGravity = args.length > 8 && parseBoolean(args[8]);
                 for (int j = -cont; j < cont; j++) {
                     for (int k = -cont; k < cont; k++) {
                         sender.getEntityWorld().setBlockState(new BlockPos(x + j, y + k, z - cont), state);
@@ -66,7 +67,7 @@ public class CommandGameStart extends CommandBase {
                     }
                 }
 
-                setGameState(true, x, y, z, speed, sender.getCommandSenderEntity().dimension, cont);
+                setGameState(true, x, y, z, speed, sender.getCommandSenderEntity().dimension, cont, dismemberedGravity);
             }
         }
     }
@@ -79,20 +80,22 @@ public class CommandGameStart extends CommandBase {
             return getTabCompletionCoordinate(args, 1, targetPos);
         } else if ("start".equals(args[0]) && args.length == 6) {
             return getListOfStringsMatchingLastWord(args, Block.REGISTRY.getKeys());
+        }else if ("start".equals(args[0]) && args.length ==9) {
+            return getListOfStringsMatchingLastWord(args, "true","false");
         }
         return Collections.emptyList();
     }
 
     private void setGameState(boolean start) throws CommandException {
-        setGameState(start, 0, 0, 0, 0, 0, 0);
+        setGameState(start, 0, 0, 0, 0, 0, 0, false);
     }
 
-    private void setGameState(boolean start, double x, double y, double z, int speed, int dimension, int size) throws CommandException {
+    private void setGameState(boolean start, double x, double y, double z, int speed, int dimension, int size, boolean dismemberedGravity) throws CommandException {
         GravityGameInstance gameInstance = GravityGameInstance.getInstance();
         if (start) {
             if (gameInstance.isRunning())
                 throw new CommandException("commands.gravity.alreadystarted");
-            gameInstance.start(x, y, z, speed, dimension, size);
+            gameInstance.start(x, y, z, speed, dimension, size, dismemberedGravity);
         } else {
             if (!gameInstance.isRunning())
                 throw new CommandException("commands.gravity.nostarted");

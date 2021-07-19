@@ -2,6 +2,7 @@ package net.kunmc.lab.gravitymod_dga;
 
 import net.kunmc.lab.gravitymod_dga.data.GravityGameInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.GameType;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -31,8 +32,8 @@ public class ServerHandler {
     @SubscribeEvent
     public static void onDamage(LivingDamageEvent e) {
         GravityGameInstance gameInstance = GravityGameInstance.getInstance();
-        if (!e.getEntityLiving().world.isRemote && e.getEntityLiving() instanceof EntityPlayerMP && gameInstance.isRunning() && gameInstance.isWait()) {
-            if (gameInstance.getPlayers().contains(((EntityPlayerMP) e.getEntityLiving()).getGameProfile().getId()))
+        if (!e.getEntityLiving().world.isRemote && e.getEntityLiving() instanceof EntityPlayerMP && gameInstance.isRunning()) {
+            if (gameInstance.getPlayers().contains(((EntityPlayerMP) e.getEntityLiving()).getGameProfile().getId()) && (gameInstance.isWait() || e.getSource() == DamageSource.FALL))
                 e.setCanceled(true);
         }
     }
