@@ -9,8 +9,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.Logger;
+import uk.co.mysterymayhem.gravitymod.GravityMod;
 
-@Mod(modid = GravityModAddon.MODID, name = GravityModAddon.NAME, version = GravityModAddon.VERSION)
+@Mod(modid = GravityModAddon.MODID, name = GravityModAddon.NAME, version = GravityModAddon.VERSION, dependencies = "required-after:" + GravityMod.MOD_ID)
 public class GravityModAddon {
     public static final String MODID = "gravitymod_deathgameaddon";
     public static final String NAME = "Up And Down And All Around And Death";
@@ -25,7 +26,14 @@ public class GravityModAddon {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-
+        logger.info("\n" +
+                "  ####    ###  ##   ####     #####    #####     #####   ####               #####  #### ##  ##  ##      #      ####     ####     ####\n" +
+                "   ##      ##  ##    ##     ##   ##  ##   ##   ##  ##    ##               ##  ##   ##  ##  ##  ##     ###      ##       ##       ##\n" +
+                "   ##      ## ##     ##          ##  ##   ##  ##  ###    ##              ##  ###   ## ##   ######     ###      ##       ##       ##\n" +
+                "   ##      ####      ##      #####   ##   ##  ##         ##              ##        #####   ##  ##    ## ##     ##       ##      ####\n" +
+                "   ##      ## ##     ##     #        ##   ##  ##         ##              ##        ##  ##  ##  ##    ## ##     ##       ##     ##  ##\n" +
+                "   ##      ##  ##    ##     ##   ##  ##   ##   ##  ##    ##               ##  ##   ##  ##   ####    ##   ##    ##     # ## #   ##  ##\n" +
+                "  ####    ###  ##   ####     #####   ##   ##    ####    ####               ####   ######     ##     ##   ##   ####    ######   ##  ##");
     }
 
     @Mod.EventHandler
@@ -37,4 +45,5 @@ public class GravityModAddon {
     public void serverStop(FMLServerStoppingEvent event) {
         GravityGameInstance.getInstance().stop();
     }
+
 }

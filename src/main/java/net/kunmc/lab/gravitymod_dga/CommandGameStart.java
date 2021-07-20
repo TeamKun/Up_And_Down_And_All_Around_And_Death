@@ -11,6 +11,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -38,9 +39,10 @@ public class CommandGameStart extends CommandBase {
             case 0:
                 throw new WrongUsageException("commands.gravity.usage");
             case 1:
-                if ("stop".equals(args[0]))
+                if ("stop".equals(args[0])) {
+                    sender.sendMessage(new TextComponentTranslation("commands.gravity.stop"));
                     setGameState(false);
-                else
+                } else
                     throw new WrongUsageException("commands.gravity.usage");
                 break;
         }
@@ -66,7 +68,7 @@ public class CommandGameStart extends CommandBase {
                         sender.getEntityWorld().setBlockState(new BlockPos(x + cont, y + k, z + j), state);
                     }
                 }
-
+                sender.sendMessage(new TextComponentTranslation("commands.gravity.start"));
                 setGameState(true, x, y, z, speed, sender.getCommandSenderEntity().dimension, cont, dismemberedGravity);
             }
         }
@@ -80,8 +82,8 @@ public class CommandGameStart extends CommandBase {
             return getTabCompletionCoordinate(args, 1, targetPos);
         } else if ("start".equals(args[0]) && args.length == 6) {
             return getListOfStringsMatchingLastWord(args, Block.REGISTRY.getKeys());
-        }else if ("start".equals(args[0]) && args.length ==9) {
-            return getListOfStringsMatchingLastWord(args, "true","false");
+        } else if ("start".equals(args[0]) && args.length == 9) {
+            return getListOfStringsMatchingLastWord(args, "true", "false");
         }
         return Collections.emptyList();
     }

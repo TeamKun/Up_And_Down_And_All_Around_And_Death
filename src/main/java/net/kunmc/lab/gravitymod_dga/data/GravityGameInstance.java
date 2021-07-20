@@ -39,7 +39,7 @@ public class GravityGameInstance {
         return INSTANCE;
     }
 
-    public void start(double x, double y, double z, int speed, int dimension, int size,boolean dismemberedGravity) {
+    public void start(double x, double y, double z, int speed, int dimension, int size, boolean dismemberedGravity) {
         this.maxEntityCramming = ServerUtils.getServer().getWorld(dimension).getGameRules().getInt("maxEntityCramming");
         ServerUtils.getServer().getWorld(dimension).getGameRules().setOrCreateGameRule("maxEntityCramming", "0");
         for (EntityPlayerMP player : ServerUtils.getPlayers()) {
@@ -63,6 +63,7 @@ public class GravityGameInstance {
         this.dimension = dimension;
         this.size = size;
         this.running = true;
+        this.dismemberedGravity = dismemberedGravity;
     }
 
     public void stop() {

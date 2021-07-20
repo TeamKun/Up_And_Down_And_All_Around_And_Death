@@ -4,3 +4,6 @@ death.attack.outOfArea=%s は場外に出てしまった
 gravitygame.start.wait=開始まであと%s秒
 gravitygame.next=次の回転まであと%s秒
 gravitygame.lastPlayer=%s が最後まで生き残りました
+commands.gravity.usage=https://github.com/TeamKun/Up_And_Down_And_All_Around_And_Deathを読んでください
+commands.gravity.start=ゲームを開始します...
+commands.gravity.stop=ゲームを停止します

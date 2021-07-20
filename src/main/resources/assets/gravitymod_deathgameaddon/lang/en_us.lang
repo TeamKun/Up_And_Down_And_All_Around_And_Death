@@ -4,3 +4,6 @@ death.attack.outOfArea=%s fell out of the area
 gravitygame.start.wait=%s seconds to start
 gravitygame.next=%s seconds until the next rotation
 gravitygame.lastPlayer=%s is the last player
+commands.gravity.usage=You can use it at https://github.com/TeamKun/Up_And_Down_And_All_Around_And_Death
+commands.gravity.start=Start Game...
+commands.gravity.stop=Stop Game
