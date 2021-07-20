@@ -51,7 +51,7 @@ public class CommandGameStart extends CommandBase {
             double y = args.length > i ? parseDouble(vec3d.y, args[i++], 0, 0, false) : vec3d.y;
             double z = args.length > i ? parseDouble(vec3d.z, args[i], true) : vec3d.z;
             if ("start".equals(args[0])) {
-                int cont = args.length > 4 ? parseInt(args[4], 0, 100) : 25;
+                int cont = args.length > 4 ? parseInt(args[4], 3, 100) : 25;
                 Block block = args.length > 5 ? CommandBase.getBlockByText(sender, args[5]) : Blocks.STONE;
                 IBlockState state = args.length > 6 ? convertArgToBlockState(block, args[6]) : block.getDefaultState();
                 int speed = args.length > 7 ? parseInt(args[7], 1) : 10;
