@@ -85,7 +85,7 @@ public class CommandGameStart extends CommandBase {
                 sender.sendMessage(new TextComponentTranslation("commands.gravity.change.rotedspeed", speed));
                 gameInstance.setSpeed(speed);
             } else if ("holespeed".equals(args[1]) && args.length >= 3) {
-                double holeSpeed = parseDouble(args[2], 1);
+                double holeSpeed = parseDouble(args[2], 0);
                 sender.sendMessage(new TextComponentTranslation("commands.gravity.change.holespeed", holeSpeed));
                 gameInstance.setHoleSpeed((float) holeSpeed);
             } else if ("randomdirection".equals(args[1]) && args.length >= 3) {
