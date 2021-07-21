@@ -1,6 +1,5 @@
 package net.kunmc.lab.gravitymod_dga;
 
-import net.kunmc.lab.gravitymod_dga.data.GravityGameInstance;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.CommandBase;
@@ -71,18 +70,45 @@ public class CommandGameStart extends CommandBase {
                 sender.sendMessage(new TextComponentTranslation("commands.gravity.start"));
                 setGameState(true, x, y, z, speed, sender.getCommandSenderEntity().dimension, cont, dismemberedGravity);
             }
+        } else if ("change".equals(args[0]) && args.length >= 2) {
+            GravityGameInstance gameInstance = GravityGameInstance.getInstance();
+            if (!gameInstance.isRunning())
+                throw new CommandException("commands.gravity.nostarted");
+
+            if (args.length < 3) {
+                if (!gameInstance.isRunning())
+                    throw new CommandException("commands.gravity.noarg");
+            }
+
+            if ("rotedspeed".equals(args[1]) && args.length >= 3) {
+                int speed = parseInt(args[2], 1);
+                sender.sendMessage(new TextComponentTranslation("commands.gravity.change.rotedspeed", speed));
+                gameInstance.setSpeed(speed);
+            } else if ("holespeed".equals(args[1]) && args.length >= 3) {
+                double holeSpeed = parseDouble(args[2], 1);
+                sender.sendMessage(new TextComponentTranslation("commands.gravity.change.holespeed", holeSpeed));
+                gameInstance.setHoleSpeed((float) holeSpeed);
+            } else if ("randomdirection".equals(args[1]) && args.length >= 3) {
+                boolean dismemberedGravity = parseBoolean(args[2]);
+                sender.sendMessage(new TextComponentTranslation("commands.gravity.change.randomdirection." + dismemberedGravity));
+                gameInstance.setDismemberedGravity(dismemberedGravity);
+            }
         }
     }
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, "start", "stop");
+            return getListOfStringsMatchingLastWord(args, "start", "stop", "change");
         } else if ("start".equals(args[0]) && args.length <= 4) {
             return getTabCompletionCoordinate(args, 1, targetPos);
         } else if ("start".equals(args[0]) && args.length == 6) {
             return getListOfStringsMatchingLastWord(args, Block.REGISTRY.getKeys());
         } else if ("start".equals(args[0]) && args.length == 9) {
+            return getListOfStringsMatchingLastWord(args, "true", "false");
+        } else if ("change".equals(args[0]) && args.length == 2) {
+            return getListOfStringsMatchingLastWord(args, "rotedspeed", "holespeed", "randomdirection");
+        } else if ("change".equals(args[0]) && args.length == 3 && "randomdirection".equals(args[1])) {
             return getListOfStringsMatchingLastWord(args, "true", "false");
         }
         return Collections.emptyList();

@@ -1,4 +1,4 @@
-package net.kunmc.lab.gravitymod_dga.util;
+package net.kunmc.lab.gravitymod_dga;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;

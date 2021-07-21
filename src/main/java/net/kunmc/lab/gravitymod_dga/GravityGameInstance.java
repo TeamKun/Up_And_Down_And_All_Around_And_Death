@@ -1,13 +1,13 @@
-package net.kunmc.lab.gravitymod_dga.data;
+package net.kunmc.lab.gravitymod_dga;
 
-import net.kunmc.lab.gravitymod_dga.GADamageSources;
-import net.kunmc.lab.gravitymod_dga.util.ServerUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
+import net.minecraft.network.play.server.SPacketTitle;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
@@ -25,9 +25,10 @@ public class GravityGameInstance {
     private boolean dismemberedGravity;
     private int maxEntityCramming;
     private boolean running;
+    private float holeSpeed;
     private int startWait;
-    private int coolDown;
     private int dimension;
+    private int coolDown;
     private int speed;
     private int size;
     private int cont;
@@ -64,6 +65,7 @@ public class GravityGameInstance {
         this.size = size;
         this.running = true;
         this.dismemberedGravity = dismemberedGravity;
+        this.holeSpeed = 1;
     }
 
     public void stop() {
@@ -93,7 +95,10 @@ public class GravityGameInstance {
         if (players.size() <= 1) {
             players.stream().findFirst().ifPresent(n -> {
                 for (EntityPlayerMP player : ServerUtils.getServer().getPlayerList().getPlayers()) {
-                    player.sendStatusMessage(new TextComponentTranslation("gravitygame.lastPlayer", ServerUtils.getServer().getPlayerList().getPlayerByUUID(n).getGameProfile().getName()), false);
+                    SPacketTitle spackettitle = new SPacketTitle(SPacketTitle.Type.SUBTITLE, new TextComponentString(String.format("§6勝者", ServerUtils.getServer().getPlayerList().getPlayerByUUID(n).getGameProfile().getName())));
+                    SPacketTitle spackettitle1 = new SPacketTitle(SPacketTitle.Type.TITLE, new TextComponentString(String.format("%s", ServerUtils.getServer().getPlayerList().getPlayerByUUID(n).getGameProfile().getName())));
+                    player.connection.sendPacket(spackettitle1);
+                    player.connection.sendPacket(spackettitle);
                 }
             });
             stop();
@@ -130,7 +135,7 @@ public class GravityGameInstance {
             }
 
             int mensiz = (size * 2) * (size * 2);
-            float par = Math.min(((float) cont / 512), 0.5f);
+            float par = Math.min(((float) cont / 512) * holeSpeed, 0.5f);
 
             for (EnumGravityDirection value : EnumGravityDirection.values()) {
                 for (int i = 0; i < ((float) mensiz * par); i++) {
@@ -206,6 +211,9 @@ public class GravityGameInstance {
         return directions.get(random.nextInt(directions.size()));
     }
 
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
 
     public void removePlayer(UUID uuid) {
         ikisugiPlayers.add(uuid);
@@ -221,5 +229,13 @@ public class GravityGameInstance {
 
     public boolean isWait() {
         return startWait > 0;
+    }
+
+    public void setHoleSpeed(float holeSpeed) {
+        this.holeSpeed = holeSpeed;
+    }
+
+    public void setDismemberedGravity(boolean dismemberedGravity) {
+        this.dismemberedGravity = dismemberedGravity;
     }
 }

@@ -1,6 +1,5 @@
 package net.kunmc.lab.gravitymod_dga;
 
-import net.kunmc.lab.gravitymod_dga.data.GravityGameInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.GameType;
